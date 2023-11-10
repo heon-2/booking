@@ -2,6 +2,7 @@ package com.booking.member.members.service;
 
 import com.booking.member.Auth.TokenDto;
 import com.booking.member.Auth.TokenProvider;
+import com.booking.member.global.adapter.BookingAdapter;
 import com.booking.member.members.domain.Gender;
 import com.booking.member.members.domain.Member;
 import com.booking.member.members.domain.UserRole;
@@ -27,6 +28,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
+    private final BookingAdapter bookingAdapter;
 
     @Override
     @Transactional
@@ -127,14 +129,15 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public Mono<Void> deleteMember(String loginId) {
+    public Mono<Void> deleteMember(String loginId,String token) {
         return Mono.defer(() -> {
                     Member member = memberRepository.findByLoginId(loginId);
                     if (member == null) return Mono.error(new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
                     return Mono.fromRunnable(() -> memberRepository.delete(member))
                             .subscribeOn(Schedulers.boundedElastic())
-                            .then();
+                            .thenReturn(member);
                 })
+                .flatMap(member->bookingAdapter.noticeMemberDeleted(member.getId(), token))
                 .then()
                 .onErrorResume(e -> {
                     log.error("회원 탈퇴 에러: {}", e.getMessage());

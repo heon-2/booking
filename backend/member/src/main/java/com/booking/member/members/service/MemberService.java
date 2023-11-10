@@ -12,7 +12,7 @@ public interface MemberService {
     Mono<MemberInfoResponseDto> loadMemberInfoByPk(Integer memberPk);
     Mono<MemberInfoResponseDto> loadMemberInfoByNickname(String nickname);
     Mono<Void> modifyMemberInfo(ModifyRequestDto req);
-    Mono<Void> deleteMember(String loginId);
+    Mono<Void> deleteMember(String loginId,String token);
 
     Mono<String> login(String loginId);
     Mono<Void> changeLocation(ChangeLocationRequestDto req,String loginId);

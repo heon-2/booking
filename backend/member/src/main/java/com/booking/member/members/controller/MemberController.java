@@ -18,6 +18,7 @@ import reactor.core.publisher.Mono;
 public class MemberController {
 
     private final MemberService memberService;
+    private final String AUTH="Authorization";
 
     @PostMapping("/signup")
     Mono<ResponseEntity<String>> signup(@RequestBody SignUpRequestDto req) {
@@ -59,9 +60,10 @@ public class MemberController {
     }
 
     @DeleteMapping("/deletion/{loginId}")
-    Mono<ResponseEntity<String>> deleteMember(@PathVariable String loginId) {
+    Mono<ResponseEntity<String>> deleteMember(@RequestHeader(AUTH) String token,
+                                              @PathVariable String loginId) {
         log.info("회원 탈퇴 {}", loginId);
-        return memberService.deleteMember(loginId)
+        return memberService.deleteMember(loginId,token)
                 .thenReturn(ResponseEntity.ok().body("탈퇴"))
                 .onErrorResume(e->{
                     log.error("탈퇴 에러 {}",e.getMessage());
