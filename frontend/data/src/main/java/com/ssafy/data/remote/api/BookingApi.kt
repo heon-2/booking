@@ -16,6 +16,7 @@ import com.ssafy.domain.model.booking.BookingWaiting
 import com.ssafy.domain.model.booking.SearchResponse
 import com.ssafy.domain.model.mypage.UserInfoResponse
 import retrofit2.Response
+import com.ssafy.data.BuildConfig
 
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -67,7 +68,7 @@ interface BookingApi {
 
 
     // 네이버 지역 검색 API
-    @Headers("X-Naver-Client-Id: aCoZnAym6gdpl1cAQpUm", "X-Naver-Client-Secret: fVdZqSbv7I")
+    @Headers("X-Naver-Client-Id: ${BuildConfig.naverClient_id}", "X-Naver-Client-Secret: ${BuildConfig.naverClient_secret}")
     // 상대경로->BASE_URL 사용 , 절대경로시 무시하고 절대경로 사용.
     @GET("https://openapi.naver.com/v1/search/local.json")
     suspend fun getSearchList(

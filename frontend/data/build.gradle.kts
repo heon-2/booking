@@ -1,9 +1,22 @@
+import java.util.Properties
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
 }
+
+// 보안키 설정을 위한 properties 세팅
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
+val naverClientId = localProperties.getProperty("naverClient_id") ?: ""
+val naverClientSecret = localProperties.getProperty("naverClient_secret") ?: ""
+val kakaoAK = localProperties.getProperty("kakaoAK") ?: ""
 
 android {
     namespace = "com.ssafy.data"
@@ -14,6 +27,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField("String", "naverClient_id", "\"$naverClientId\"")
+        buildConfigField("String", "naverClient_secret", "\"$naverClientSecret\"")
+        buildConfigField("String", "kakaoAK", "\"$kakaoAK\"")
     }
 
     buildTypes {
@@ -28,6 +45,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+    buildFeatures {
+        buildConfig = true
     }
     kotlinOptions {
         jvmTarget = "17"
