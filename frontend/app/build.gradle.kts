@@ -22,6 +22,7 @@ val naverAccessKey = localProperties.getProperty("naverAccess_key") ?: ""
 val naverSecretKey = localProperties.getProperty("naverSecret_key") ?: ""
 val naverMapClientId = localProperties.getProperty("naverMapClient_id") ?: ""
 val kakaoSdkAppKey = localProperties.getProperty("kakaoSdkApp_key") ?: ""
+val naverClientId = localProperties.getProperty("naverClient_id") ?: ""
 
 
 android {
@@ -43,7 +44,9 @@ android {
         buildConfigField("String", "naverSecret_key", "\"$naverSecretKey\"")
         buildConfigField("String", "naverMapClient_id", "\"$naverMapClientId\"")
         buildConfigField("String", "kakaoSdkApp_key", "\"$kakaoSdkAppKey\"")
+
         manifestPlaceholders["kakaoSdkAppKeyPlaceholder"] = kakaoSdkAppKey
+        manifestPlaceholders["naverClientIdPlaceholder"] = naverClientId
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
